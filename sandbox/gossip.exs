@@ -30,14 +30,6 @@ defmodule Node do
             send Process.whereis(:master), :success #send master success 
         end    
         Enum.at(elem(state, 0), :rand.uniform(elem(state,1)) - 1) |> GenServer.cast(:rumor)
-            # neigbours =   elem(state, 0)
-            # IO.inspect neigbours
-            # rand_index = :rand.uniform(elem(state,1)) - 1
-            # IO.inspect rand_index
-            # pid = Enum.at(neigbours, rand_index)
-            # IO.inspect pid
-            # GenServer.cast(pid, :rumor)    
-        
         {:noreply, {elem(state, 0), elem(state, 1), count}}
     end
 
@@ -60,7 +52,7 @@ defmodule GossipSim do
             # IO.inspect ns
             send_data(:full, list, index + 1, num)
         else
-            #NOP
+            :ok
         end
     end
     
@@ -70,7 +62,7 @@ defmodule GossipSim do
         list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Node, {[], 0, 0}), 1) end)
         #2 send info of neighbors to each process spawned before
         case topo do
-            "full" -> send_data(:full, list, 0, num)
+            "full" -> :ok = send_data(:full, list, 0, num)
             _ -> raise "Not supported"
         end
         list
