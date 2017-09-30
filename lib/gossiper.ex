@@ -18,20 +18,24 @@ defmodule Gossiper do
       {:reply, elem(state, 0), state} 
     end
 
+    #for debugging
+    def print(str) do
+        curr = self()
+        IO.inspect curr
+        IO.puts str
+    end
+
     def handle_cast(:rumor, state) do
         if(state != :inactive) do
             count = elem(state, 2) + 1; #increment number of times heard rumor
-            curr = self()
-            IO.inspect curr
-            IO.puts "got the rumor. Its count is #{count}"
-            neighbours = elem(state, 0)
-            num_neighbours = elem(state, 1)
+            print("got the rumor. Its count is #{count}")
             if count == @heard do
                 send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
-                IO.inspect curr
-                IO.puts "became inactive"
+                print("became inactive")
                 {:noreply, :inactive}
             else    
+                neighbours = elem(state, 0)
+                num_neighbours = elem(state, 1)
                 if count == 1 do #when it gets the first signal                    
                     Task.start_link(__MODULE__, :spread_rumor, [neighbours, num_neighbours]) #continuously spread the rumor     
                 end 

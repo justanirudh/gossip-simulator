@@ -1,7 +1,7 @@
 defmodule GS do
 #TODO: chnage name to GossipSimulator
   def start() do
-    num = 100
+    num = 10
     topo = "full"
     algo = "gossip"
     #register master
@@ -13,7 +13,7 @@ defmodule GS do
     #TODO: start timer here
     GenServer.cast(first, :rumor)#spread the rumor
     :ok = Utils.loop(num)#loop till master receives num number of successes
-    Process.exit(self(), "All nodes heard the rumor at least 10 times")
+    Process.exit(self(), "All nodes heard the rumor 10 times")
     #TODO: stop timer  
   end
   
