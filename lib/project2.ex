@@ -1,7 +1,7 @@
-defmodule GossipSimulator do
-
+defmodule GS do
+#TODO: chnage name to GossipSimulator
   def start() do
-    num = 10
+    num = 100
     topo = "full"
     algo = "gossip"
     #register master
@@ -18,3 +18,4 @@ defmodule GossipSimulator do
   end
   
 end
+#GossipSimulator.start

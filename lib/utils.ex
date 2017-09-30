@@ -7,8 +7,6 @@ defmodule Utils do
             num_neighbours = length(neighbours)
             :ok = GenServer.call(server, {:neighbours, neighbours, num_neighbours})
             # ns = GenServer.call(server, :show_neighbours)
-            # IO.inspect server
-            # IO.inspect ns
             send_data(:full, list, index + 1, num)
         else
             :ok
