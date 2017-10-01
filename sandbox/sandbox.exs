@@ -1,6 +1,5 @@
 defmodule Sandbox do
     use GenServer
-
     #first call to setup the node
     def handle_call(:stop, _from, st) do
         curr = self

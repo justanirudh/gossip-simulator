@@ -9,8 +9,8 @@ defmodule Gossiper do
     end
 
     #first call to setup the node
-    def handle_call({:neighbours, neighbours, len}, _from, state) do
-      {:reply, :ok, {neighbours, len, elem(state, 2)}} # reply atom, actual reply, new_state
+    def handle_call({:neighbours, neighbours}, _from, _) do
+      {:reply, :ok, {neighbours, length(neighbours), 0}} # reply atom, actual reply, new_state
     end
 
     #for debugging
@@ -19,7 +19,7 @@ defmodule Gossiper do
     end
 
     #for debugging
-    def print(str) do
+    defp print(str) do
         curr = self()
         IO.inspect curr
         IO.puts str
@@ -42,6 +42,7 @@ defmodule Gossiper do
                 {:noreply, {neighbours, num_neighbours, count}}
             end
         else
+            #TODO: sleep here to not consume CPU cycles?
             {:noreply, :inactive}
         end
     end
