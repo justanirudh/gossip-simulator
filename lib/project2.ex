@@ -31,7 +31,7 @@ defmodule GossipSimulator do
 
   def main(args) do
     num = 1024
-    topo = "full"
+    topo = "line"
     algo = "gossip"
     
     #TODO remove this
