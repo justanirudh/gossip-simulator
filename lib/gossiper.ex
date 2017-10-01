@@ -32,7 +32,7 @@ defmodule Gossiper do
         if(state != :inactive) do
             count = elem(state, 2) + 1; #increment number of times heard rumor
             # print("got the rumor. Its count is #{count}")
-            curr = self() #TODO remove this, for debugging
+            curr = self() #TODO for debugging
             if count == @heard do
                 # send elem(state, 3), :stop
                 t = elem(state, 3)
@@ -40,17 +40,17 @@ defmodule Gossiper do
                 # Task.shutdown(t)
                 # IO.inspect Process.alive?(t)
                 Process.exit(t, :kill)
-                IO.inspect Process.alive?(t)    
+                # IO.inspect Process.alive?(t)    
                 # IO.puts "task shutdown"
                 # print("became inactive")
-                send Process.whereis(:master), {:inactive, curr} #TODO remove this, for debugging
+                send Process.whereis(:master), {:inactive, curr} #TODO for debugging
                 send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
                 {:noreply, :inactive}
             else
                 neighbours = elem(state, 0)
                 num_neighbours = elem(state, 1)
                 if count == 1 do #when it gets the first signal
-                    send Process.whereis(:master), {:first_signal, curr} #TODO remove this; for debugging              
+                    send Process.whereis(:master), {:first_signal, curr} #TODO for debugging              
                     t = spawn(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor     
                     {:noreply, {neighbours, num_neighbours, 1, t}} #add PID to state
                 else    
@@ -58,8 +58,6 @@ defmodule Gossiper do
                 end   
             end
         else
-            #TODO: sleep here to not consume CPU cycles?
-            IO.puts "inactive now"
             {:noreply, :inactive}
         end
     end
