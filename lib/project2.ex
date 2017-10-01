@@ -30,7 +30,7 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 1000
+    num = 1024
     topo = "full"
     algo = "gossip"
     

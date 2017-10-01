@@ -5,7 +5,8 @@ defmodule Gossiper do
 
     def spread_rumor(neighbours, num_neighbours) do
         Enum.at(neighbours, :rand.uniform(num_neighbours) - 1) |> GenServer.cast(:rumor)
-        :timer.sleep(100)
+        # IO.puts "spread the rumor"
+        # :timer.sleep(100)
         spread_rumor(neighbours, num_neighbours)
     end
 
@@ -26,6 +27,7 @@ defmodule Gossiper do
         IO.puts str
     end
 
+    #TODO: Check if termination condition is green or orange
     def handle_cast(:rumor, state) do
         if(state != :inactive) do
             count = elem(state, 2) + 1; #increment number of times heard rumor
@@ -34,13 +36,13 @@ defmodule Gossiper do
             if count == @heard do
                 # send elem(state, 3), :stop
                 t = elem(state, 3)
-                IO.inspect t
+                # IO.inspect t
                 # Task.shutdown(t)
-                IO.inspect Process.alive?(t)
+                # IO.inspect Process.alive?(t)
                 Process.exit(t, :kill)
                 IO.inspect Process.alive?(t)    
-                IO.puts "task shutdown"
-                print("became inactive")
+                # IO.puts "task shutdown"
+                # print("became inactive")
                 send Process.whereis(:master), {:inactive, curr} #TODO remove this, for debugging
                 send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
                 {:noreply, :inactive}
@@ -50,13 +52,14 @@ defmodule Gossiper do
                 if count == 1 do #when it gets the first signal
                     send Process.whereis(:master), {:first_signal, curr} #TODO remove this; for debugging              
                     t = spawn(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor     
-                    {:noreply, {neighbours, num_neighbours, count, t}} #add PID to state
+                    {:noreply, {neighbours, num_neighbours, 1, t}} #add PID to state
                 else    
                     {:noreply, {neighbours, num_neighbours, count, elem(state, 3)}}
                 end   
             end
         else
             #TODO: sleep here to not consume CPU cycles?
+            IO.puts "inactive now"
             {:noreply, :inactive}
         end
     end
