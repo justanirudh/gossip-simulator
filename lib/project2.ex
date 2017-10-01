@@ -30,7 +30,7 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 100
+    num = 1000
     topo = "full"
     algo = "gossip"
     
@@ -47,7 +47,7 @@ defmodule GossipSimulator do
     GenServer.cast(first, :rumor)#spread the rumor
     # :ok = loop(num)#loop till master receives num number of successes
     :ok = loop_debug(num, nodes)#TODO remove this, for debugging
-    IO.puts "All nodes heard the rumor 10 times"
+    IO.puts "All nodes heard the rumor n times"
     #TODO: stop timer  
   end
   
