@@ -5,7 +5,14 @@ defmodule Gossiper do
 
     def spread_rumor(neighbours, num_neighbours) do
         Enum.at(neighbours, :rand.uniform(num_neighbours) - 1) |> GenServer.cast(:rumor)
-        spread_rumor(neighbours, num_neighbours)
+        curr = self();
+        send curr, :continue
+        receive do
+            :continue -> spread_rumor(neighbours, num_neighbours)
+            :stop -> 
+                IO.puts "task stopped"
+                :ok
+        end
     end
 
     #first call to setup the node
@@ -29,17 +36,28 @@ defmodule Gossiper do
         if(state != :inactive) do
             count = elem(state, 2) + 1; #increment number of times heard rumor
             print("got the rumor. Its count is #{count}")
+            curr = self() #TODO remove this, for debugging
             if count == @heard do
-                send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
+                # send elem(state, 3), :stop
+                t = elem(state, 3)
+                IO.inspect t
+                Task.shutdown(t)
+                IO.puts "task shutdown"
                 print("became inactive")
+                send Process.whereis(:master), {:inactive, curr} #TODO remove this, for debugging
+                send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
                 {:noreply, :inactive}
-            else    
+            else
                 neighbours = elem(state, 0)
                 num_neighbours = elem(state, 1)
-                if count == 1 do #when it gets the first signal                    
-                    Task.start_link(__MODULE__, :spread_rumor, [neighbours, num_neighbours]) #continuously spread the rumor     
+                if count == 1 do #when it gets the first signal
+                    send Process.whereis(:master), {:first_signal, curr} #TODO remove this; for debugging              
+                    t = Task.async(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor     
+                    {:noreply, {neighbours, num_neighbours, count, t}} #add PID to state
+                else    
+                    {:noreply, {neighbours, num_neighbours, count, elem(state, 3)}}
                 end 
-                {:noreply, {neighbours, num_neighbours, count}}
+                
             end
         else
             #TODO: sleep here to not consume CPU cycles?
