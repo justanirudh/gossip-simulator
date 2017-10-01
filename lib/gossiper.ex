@@ -27,7 +27,7 @@ defmodule Gossiper do
         IO.puts str
     end
 
-    #TODO: Check if termination condition is green or orange
+    #TODO: Check if termination condition is green or orange (mostly green, so change that)
     def handle_cast(:rumor, state) do
         if(state != :inactive) do
             neighbours = elem(state, 0)

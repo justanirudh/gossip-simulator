@@ -30,8 +30,8 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 1024
-    topo = "line"
+    num = 9
+    topo = "2D"
     algo = "gossip"
     
     #TODO remove this
@@ -42,13 +42,13 @@ defmodule GossipSimulator do
     #create topology
     nodes = Topology.create(num, topo, algo);
     # pick a random node [0, num - 1] 
-    first = Enum.at(nodes, :rand.uniform(num) - 1)
-    #TODO: start timer here
-    GenServer.cast(first, :rumor)#spread the rumor
-    # :ok = loop(num)#loop till master receives num number of successes
-    :ok = loop_debug(num, nodes)#TODO remove this, for debugging
-    IO.puts "All nodes heard the rumor n times"
-    #TODO: stop timer  
+    # first = Enum.at(nodes, :rand.uniform(num) - 1)
+    # #TODO: start timer here
+    # GenServer.cast(first, :rumor)#spread the rumor
+    # # :ok = loop(num)#loop till master receives num number of successes
+    # :ok = loop_debug(num, nodes)#TODO remove this, for debugging
+    # IO.puts "All nodes heard the rumor n times"
+    # #TODO: stop timer  
   end
   
 end

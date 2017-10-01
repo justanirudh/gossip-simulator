@@ -16,18 +16,64 @@ defmodule Topology do
         List.delete(list, server)
     end
 
+    #total num of elems, entire list of elems, list of potential neighs, final list of neighs, index 
+    #to iterate over potential list of neighs.
+    # defp get_twoD_neighbours_aux(num, list, pot_ns, ns, index) do
+    #     case index do
+    #         4 -> ns
+    #         _ -> 
+    #             pot_n = Enum.at(pot_ns, index)
+    #             if pot_n >= 0 && pot_n < num do
+    #                 ns = [ Enum.at(list, pot_n) | ns]   
+    #             end
+    #             get_twoD_neighbours_aux(num, list, pot_ns, ns, index + 1)
+    #     end
+    # end
+
+    defp get_twoD_neighbours(list, index, num) do
+        side = num |> :math.sqrt |> round
+        row = div(index, side)
+        col = rem(index, side)
+        res = []
+
+        up_row = row - 1
+        if(up_row >= 0) do
+            res = [ Enum.at(list, (up_row * side) + col) | res]        
+        end         
+        down_row = row + 1
+        if(down_row < side) do
+            res = [ Enum.at(list, (down_row * side) + col)  | res]
+        end    
+        left_col = col - 1
+        if left_col >= 0 do
+            res = [ Enum.at(list, (row * side) + left_col) | res]
+        end
+        right_col = col + 1
+        if right_col < side do
+            res = [ Enum.at(list, (row * side) + right_col) | res]
+        end
+
+        res
+        # up = ((row - 1) * side) + col
+        # down = ((row + 1) * side) + col
+        # left = (row * side) + (col - 1)
+        # right = (row * side) + (col + 1)
+        # get_twoD_neighbours_aux(num, list, [up, down, left, right], [], 0)        
+    end
+
     defp send_data(list, index, num, topo) do
         if(index != num) do
             server = Enum.at(list, index)
             neighbours = case topo do
                 :full -> get_full_neighbours(list, server)
                 :line -> get_line_neighbours(list, index, num)
+                :twoD -> get_twoD_neighbours(list, index, num)
                 _ -> raise topo <> " not supported"  
             end                
             :ok = GenServer.call(server, {:neighbours, neighbours})
-            # ns = GenServer.call(server, :show_neighbours)
-            # IO.inspect server
-            # IO.inspect ns
+            ns = GenServer.call(server, :show_neighbours)
+            IO.inspect server
+            IO.inspect ns
             send_data(list, index + 1, num, topo)
         else
             :ok
@@ -37,11 +83,19 @@ defmodule Topology do
     
     def create(num, topo, algo) do
         #1 spawn processes
-        list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
         #2 send info of neighbors to each process spawned before
         case topo do
-            "full" -> :ok = send_data(list, 0, num, :full)
-            "line" -> :ok = send_data(list, 0, num, :line)
+            "full" -> 
+                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
+                :ok = send_data(list, 0, num, :full)
+            "line" -> 
+                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
+                :ok = send_data(list, 0, num, :line)
+            "2D" -> 
+                num = num |> :math.sqrt |> round |> :math.pow(2) |> round
+                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
+                IO.inspect list    
+                :ok = send_data(list, 0, num, :twoD)
              _ -> raise "Not supported"
         end
         list
