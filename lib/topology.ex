@@ -41,6 +41,16 @@ defmodule Topology do
         res   
     end
 
+    defp get_impTwoD_neighbours(list, index, num, server) do
+        ns = get_twoD_neighbours(list, index, num)
+        #remove 4 neighbours and itself from the space
+        space_left = get_full_neighbours(list,server) -- ns 
+        #select a random element from left space
+        fifth =  Enum.at(space_left, :rand.uniform(length(space_left)) - 1)
+        [fifth | ns]
+    end    
+
+
     defp send_data(list, index, num, topo) do
         if(index != num) do
             server = Enum.at(list, index)
@@ -48,6 +58,7 @@ defmodule Topology do
                 :full -> get_full_neighbours(list, server)
                 :line -> get_line_neighbours(list, index, num)
                 :twoD -> get_twoD_neighbours(list, index, num)
+                :impTwoD -> get_impTwoD_neighbours(list, index, num, server)
                 _ -> raise topo <> " not supported"  
             end                
             :ok = GenServer.call(server, {:neighbours, neighbours})
@@ -73,10 +84,14 @@ defmodule Topology do
                 :ok = send_data(list, 0, num, :line)
             "2D" -> 
                 num = num |> :math.sqrt |> round |> :math.pow(2) |> round
+                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
+                :ok = send_data(list, 0, num, :twoD)
+            "imp2D" -> 
+                num = num |> :math.sqrt |> round |> :math.pow(2) |> round
                 IO.puts num
                 list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
                 IO.inspect list    
-                :ok = send_data(list, 0, num, :twoD)
+                :ok = send_data(list, 0, num, :impTwoD)
              _ -> raise "Not supported"
         end
         list

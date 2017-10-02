@@ -30,8 +30,8 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 100
-    topo = "line"
+    num = 512
+    topo = "imp2D"
     algo = "gossip"
     
     #TODO remove this

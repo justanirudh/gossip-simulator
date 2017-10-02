@@ -55,7 +55,7 @@ defmodule Gossiper do
                     pid = spawn(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor  
                     #state now: {neighbours, neighbours_size, number of times heard, pid of child process}    
                     {:noreply, {neighbours, num_neighbours, 1, pid}} #add PID to state
-                else  #count is incrementing to reach @heard
+                else  #gets non-first signal
                     {:noreply, {neighbours, num_neighbours, count, pid}}
                 end   
             end
