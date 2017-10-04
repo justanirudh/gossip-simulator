@@ -72,6 +72,7 @@ defmodule Adder do
                     end
                     send Process.whereis(:master), {:inactive, curr} #TODO for debugging
                     send Process.whereis(:master), :success #send master success
+                    IO.inspect new_ratio #TODO for debugging
                     {:noreply, :inactive}
                 else
                     child_pid = kill_and_replay(child_pid, neighbours, num_neighbours, new_s/2, new_w/2)

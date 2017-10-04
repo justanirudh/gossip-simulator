@@ -30,8 +30,8 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 512
-    topo = "full"
+    num = 1024
+    topo = "imp2D"
     algo = "push-sum"
     
     #register master
