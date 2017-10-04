@@ -2,6 +2,13 @@ defmodule Gossiper do
     use GenServer
     @heard 10
     #state: {neighbours, neighbours_size, number of times heard, child pid} 
+  
+    #for debugging
+    defp print(str) do
+        curr = self()
+        IO.inspect curr
+        IO.puts str
+    end
 
     def spread_rumor(neighbours, num_neighbours) do
         Enum.at(neighbours, :rand.uniform(num_neighbours) - 1) |> GenServer.cast(:rumor)
@@ -10,21 +17,14 @@ defmodule Gossiper do
         spread_rumor(neighbours, num_neighbours)
     end
 
+    #for debugging
+    def handle_call(:show_neighbours, _from, state) do
+        {:reply, elem(state, 0), state} 
+    end
+
     #first call to setup the node
     def handle_call({:neighbours, neighbours}, _from, _) do
       {:reply, :ok, {neighbours, length(neighbours), 0, nil}} # reply atom, actual reply, new_state
-    end
-
-    #for debugging
-    def handle_call(:show_neighbours, _from, state) do
-      {:reply, elem(state, 0), state} 
-    end
-
-    #for debugging
-    defp print(str) do
-        curr = self()
-        IO.inspect curr
-        IO.puts str
     end
 
     #TODO: Check if termination condition is green or orange (mostly green, so change that)
@@ -33,30 +33,23 @@ defmodule Gossiper do
             neighbours = elem(state, 0)
             num_neighbours = elem(state, 1)
             count = elem(state, 2)
-            pid = elem(state, 3)
+            child_pid = elem(state, 3)
             count = count + 1; #increment number of times heard rumor
             # print("got the rumor. Its count is #{count}")
             curr = self() #TODO for debugging
             if count == @heard do #count reached @heard
-                # send pid, :stop
-                # IO.inspect pid
-                # Task.shutdown(pid)
-                # IO.inspect Process.alive?(pid)
-                Process.exit(pid, :kill)
-                # IO.inspect Process.alive?(pid)    
-                # IO.puts "task shutdown"
-                # print("became inactive")
+                Process.exit(child_pid, :kill)
                 send Process.whereis(:master), {:inactive, curr} #TODO for debugging
                 send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
                 {:noreply, :inactive}
             else #count hasnt reached @heard
                 if count == 1 do #when it gets the first signal
                     send Process.whereis(:master), {:first_signal, curr} #TODO for debugging              
-                    pid = spawn(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor  
+                    child_pid = spawn(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor  
                     #state now: {neighbours, neighbours_size, number of times heard, pid of child process}    
-                    {:noreply, {neighbours, num_neighbours, 1, pid}} #add PID to state
+                    {:noreply, {neighbours, num_neighbours, 1, child_pid}} #add PID to state
                 else  #gets non-first signal
-                    {:noreply, {neighbours, num_neighbours, count, pid}}
+                    {:noreply, {neighbours, num_neighbours, count, child_pid}}
                 end   
             end
         else #node is inactive

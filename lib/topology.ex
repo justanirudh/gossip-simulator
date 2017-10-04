@@ -91,7 +91,7 @@ defmodule Topology do
         list = 
             case algo do
                 "gossip" -> 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
-                "push-sum" -> 1..num |> Enum.map(fn i -> elem(GenServer.start_link(Adder, {i, 1}), 1) end) #{s,w}
+                "push-sum" -> 1..num |> Enum.map(fn i -> elem(GenServer.start_link(Adder, i), 1) end) #{s,w}
                 _ -> raise "Not supported"
             end
 
