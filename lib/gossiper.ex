@@ -34,7 +34,7 @@ defmodule Gossiper do
             num_neighbours = elem(state, 1)
             count = elem(state, 2)
             child_pid = elem(state, 3)
-            count = count + 1; #increment number of times heard rumor
+            count = count + 1 #increment number of times heard rumor
             # print("got the rumor. Its count is #{count}")
             curr = self() #TODO for debugging
             if count == @heard do #count reached @heard

@@ -30,9 +30,10 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 1024
-    topo = "imp2D"
-    algo = "push-sum"
+    IO.inspect Enum.at(args, 1)
+    num = Enum.at(args, 0) |> String.to_integer
+    topo = Enum.at(args, 1)
+    algo = Enum.at(args, 2)
     
     #register master
     self() |> Process.register(:master)
