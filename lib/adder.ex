@@ -35,6 +35,17 @@ defmodule Adder do
         {:reply, :ok, {neighbours, length(neighbours), s, 1, 0, nil}} # reply atom, actual reply, new_state
     end
 
+    #first call to start the pushsum algo
+    def handle_cast(:start, state) do
+        neighbours = elem(state, 0)
+        num_neighbours = elem(state, 1)
+        s = elem(state, 2)
+        w = elem(state, 3)
+        
+        child_pid = kill_and_replay(nil, neighbours, num_neighbours, s/2, w/2)
+        {:noreply, {neighbours, num_neighbours, s/2, w/2, elem(state, 4), child_pid}} #pass s/2, w/2
+    end
+
     def handle_cast({:pushsum, s, w}, state) do
         if(state != :inactive) do
             neighbours = elem(state, 0)

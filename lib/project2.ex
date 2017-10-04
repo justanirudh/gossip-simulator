@@ -30,9 +30,9 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 800
-    topo = "imp2D"
-    algo = "gossip"
+    num = 512
+    topo = "full"
+    algo = "push-sum"
     
     #register master
     self() |> Process.register(:master)
@@ -41,10 +41,14 @@ defmodule GossipSimulator do
     # pick a random node [0, num - 1] 
     first = Enum.at(nodes, :rand.uniform(num) - 1)
     #TODO: start timer here
-    GenServer.cast(first, :rumor)#spread the rumor
+    case algo do
+       "gossip" -> GenServer.cast(first, :rumor) #spread the rumor
+       "push-sum" -> GenServer.cast(first, :start) #spread the rumor       
+    end
+    
     # :ok = loop(num)#loop till master receives num number of successes
     :ok = loop_debug(num, nodes)#TODO remove this, for debugging
-    IO.puts "All nodes heard the rumor n times"
+    IO.puts "All nodes converged"
     #TODO: stop timer  
   end
   
