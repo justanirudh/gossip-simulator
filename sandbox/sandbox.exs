@@ -20,7 +20,8 @@ defmodule Sandbox do
     end
 
     def handle_call(:start, _from, st) do
-        t = Task.async(fn -> __MODULE__.spread_rumor end)
+        # t = Task.async(fn -> __MODULE__.spread_rumor end)
+        t = spawn(fn -> __MODULE__.spread_rumor end)
         # t = Task.async(__MODULE__, spread_rumor, [])
         {:reply, :ok, t} # reply atom, actual reply, new_state
     end
@@ -29,12 +30,17 @@ defmodule Sandbox do
     def handle_call(:stop, _from, st) do
         IO.inspect st
         # Process.exit(st[:pid], "stop please")
-        Task.shutdown(st, :brutal_kill)
+        # Task.shutdown(st, :brutal_kill)
+        Process.exit(st, :kill)
         IO.puts "still runs after killing child"
         {:reply, :ok, nil} # reply atom, actual reply, new_state
     end
 end
-{:ok, pid} = GenServer.start_link(Sandbox, [])
+# foo = Sandbox
+foo = Bar
+IO.inspect foo
+{:ok, pid} = GenServer.start_link(foo, [])
 GenServer.call(pid, :start)
+# :timer.sleep 100
 GenServer.call(pid, :stop)
 # Sandbox.spread_rumor2

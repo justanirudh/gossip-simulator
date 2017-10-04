@@ -75,24 +75,31 @@ defmodule Topology do
     def create(num, topo, algo) do
         #1 spawn processes
         #2 send info of neighbors to each process spawned before
+        
+        num = 
+            case topo do
+                "full" -> num
+                "line" -> num
+                "2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round
+                "imp2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round
+                _ -> raise "Not supported"     
+            end
+
+        #TODO remove this
+        IO.puts "<plotty: draw, #{num}>"
+        
+        list = 
+            case algo do
+                "gossip" -> 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
+                "push-sum" -> 1..num |> Enum.map(fn i -> elem(GenServer.start_link(Adder, {i, 1}), 1) end) #{s,w}
+                _ -> raise "Not supported"
+            end
+
         case topo do
-            "full" -> 
-                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
-                :ok = send_data(list, 0, num, :full)
-            "line" -> 
-                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
-                :ok = send_data(list, 0, num, :line)
-            "2D" -> 
-                num = num |> :math.sqrt |> round |> :math.pow(2) |> round
-                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
-                :ok = send_data(list, 0, num, :twoD)
-            "imp2D" -> 
-                num = num |> :math.sqrt |> round |> :math.pow(2) |> round
-                IO.puts num
-                list = 1..num |> Enum.map(fn _ -> elem(GenServer.start_link(Gossiper, []), 1) end)
-                IO.inspect list    
-                :ok = send_data(list, 0, num, :impTwoD)
-             _ -> raise "Not supported"
+            "full" -> :ok = send_data(list, 0, num, :full)
+            "line" -> :ok = send_data(list, 0, num, :line)
+            "2D" -> :ok = send_data(list, 0, num, :twoD)
+            "imp2D" -> :ok = send_data(list, 0, num, :impTwoD)
         end
         list
     end

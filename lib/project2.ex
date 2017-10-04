@@ -30,13 +30,10 @@ defmodule GossipSimulator do
   end
 
   def main(args) do
-    num = 512
+    num = 800
     topo = "imp2D"
     algo = "gossip"
     
-    #TODO remove this
-    IO.puts "<plotty: draw, #{num}>"
-
     #register master
     self() |> Process.register(:master)
     #create topology
