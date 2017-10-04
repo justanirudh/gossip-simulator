@@ -48,7 +48,7 @@ defmodule Adder do
             new_s = old_s + s
             new_w = old_w + w
             new_ratio = new_s/new_w
-            if(new_ratio - old_ratio <= @diff) do
+            if(abs(new_ratio - old_ratio) <= @diff) do
                 rounds = rounds + 1
                 if(rounds == @round_lim) do
                     if(child_pid != nil) do
