@@ -1,8 +1,7 @@
 # GossipSimulator
 
 #TODO
-1. Convert native units to microseconds
-2. Bonus part of question
+1. Bonus part of question
 
 ##Some design decisions
 1. Every node, after receipt of a rumor/(sum, weight), continuously transmits the rumor/(sum/2, weight/2) every 100 milliseconds
