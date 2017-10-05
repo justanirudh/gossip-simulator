@@ -6,7 +6,7 @@
 
 ##Some design decisions
 1. Every node, after receipt of a rumor/(sum, weight), continuously transmits the rumor/(sum/2, weight/2) every 100 milliseconds
-2. IMPORTANT: Times in the attached graphs are monotonic times in :native time units. It is returned when you use the monotonic_time/0 function (without any parameters). Time returned when you run the program is in milliseconds. This is returned when we use monotonic_time/1 with :millisecond as parameter
+2. IMPORTANT: Times in the attached graphs are monotonic times in :native time units. It is returned when you use the monotonic_time/0 function (without any parameters). On the other hand, time returned when you run the program is in milliseconds. This is returned when we use monotonic_time/1 with :millisecond as parameter
 
 * Team members (1): Anirudh Pathak
 * What is working: All combinations of topologies and algorithms + BONUS (TODO)
