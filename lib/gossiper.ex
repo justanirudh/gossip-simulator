@@ -35,18 +35,18 @@ defmodule Gossiper do
             count = elem(state, 2)
             child_pid = elem(state, 3)
             count = count + 1 #increment number of times heard rumor
-            # print("got the rumor. Its count is #{count}")
             curr = self() #TODO for debugging
             if count == @heard do #count reached @heard
                 Process.exit(child_pid, :kill)
-                send Process.whereis(:master), {:inactive, curr} #TODO for debugging
-                send Process.whereis(:master), :success #send master success; TODO: there should not be any master?
+                # send Process.whereis(:master), {:inactive, curr} #TODO for debugging
+                send Process.whereis(:master), :success #send master success
                 {:noreply, :inactive}
             else #count hasnt reached @heard
                 if count == 1 do #when it gets the first signal
-                    send Process.whereis(:master), {:first_signal, curr} #TODO for debugging              
+                    # send Process.whereis(:master), {:first_signal, curr} #TODO for debugging              
                     child_pid = spawn(fn -> __MODULE__.spread_rumor(neighbours, num_neighbours) end) #continuously spread the rumor  
-                    #state now: {neighbours, neighbours_size, number of times heard, pid of child process}    
+                    #state now: {neighbours, neighbours_size, number of times heard, pid of child process}  
+                    # send Process.whereis(:master), :success #send master success  
                     {:noreply, {neighbours, num_neighbours, 1, child_pid}} #add PID to state
                 else  #gets non-first signal
                     {:noreply, {neighbours, num_neighbours, count, child_pid}}

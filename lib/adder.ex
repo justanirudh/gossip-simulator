@@ -58,7 +58,7 @@ defmodule Adder do
             curr = self() #TODO for debugging
             if child_pid == nil do #TODO: remove this, for debugging
                 #first call: active and child pid is nill, hence first call
-                send Process.whereis(:master), {:first_signal, curr} #TODO for debugging 
+                # send Process.whereis(:master), {:first_signal, curr} #TODO for debugging 
             end
             old_ratio = old_s/old_w
             new_s = old_s + s
@@ -70,9 +70,9 @@ defmodule Adder do
                     if(child_pid != nil) do
                         Process.exit(child_pid, :kill) #kill previous spreader    
                     end
-                    send Process.whereis(:master), {:inactive, curr} #TODO for debugging
+                    # send Process.whereis(:master), {:inactive, curr} #TODO for debugging
                     send Process.whereis(:master), :success #send master success
-                    IO.inspect new_ratio #TODO for debugging
+                    # IO.inspect new_ratio #TODO for debugging
                     {:noreply, :inactive}
                 else
                     child_pid = kill_and_replay(child_pid, neighbours, num_neighbours, new_s/2, new_w/2)
