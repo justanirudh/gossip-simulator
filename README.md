@@ -1,11 +1,12 @@
 # GossipSimulator
 
 #TODO
-1. Bonus part of question
+1. Change all times to milliseconds?
+2. Bonus part of question
 
 ##Some design decisions
 1. Every node, after receipt of a rumor/(sum, weight), continuously transmits the rumor/(sum/2, weight/2) every 100 milliseconds
-2. Times in the attached graphs and the one returned when you run the program are monotonic times in :native time units. It is returned when you use the monotonic_time/0 function (without any parameters)
+2. IMPORTANT: Times in the attached graphs are monotonic times in :native time units. It is returned when you use the monotonic_time/0 function (without any parameters). Time returned when you run the program is in milliseconds. This is returned when we use monotonic_time/1 with :millisecond as parameter
 
 * Team members (1): Anirudh Pathak
 * What is working: All combinations of topologies and algorithms + BONUS (TODO)
@@ -26,7 +27,7 @@ Graph1: Convergence means all nodes have heard the rumor at least once
 Graph2: Convergence means 50% of nodes have heard the rumor at least 10 times (This condition is also used in code for convergence)
 
 ## Some interesting findings in Gossip
-1. For gossip + line, there might be cases when a set of nodes dont heart he rumor even once. This might happen if a node becomes inactive before activating its next neighbour
+1. For gossip + line, there might be cases when a set of nodes dont hear the rumor even once. This might happen if a node becomes inactive before activating its next neighbour
 2. For gossip + line, if adjacent neighbours (2) are inactive for an active node, the node will always remain active as it will never hear more rumors
 3. For gossip + 2D, if adjacent neighbours (4) are inactive for an active node, the node will always remain active as it will never hear more rumors
 4. In general, for Gossip algo where convergence is defined as all nodes hearing the rumor at least once, Full does better than Imperfect 2D which does better than 2D which does better than Line  
