@@ -80,13 +80,13 @@ defmodule Topology do
             case topo do
                 "full" -> num
                 "line" -> num
-                "2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round
+                "2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round #TODO: always round up?
                 "imp2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round
                 _ -> raise "Not supported"     
             end
 
         #TODO remove this
-        IO.puts "<plotty: draw, #{num}>"
+        # IO.puts "<plotty: draw, #{num}>"
         
         list = 
             case algo do
@@ -101,6 +101,6 @@ defmodule Topology do
             "2D" -> :ok = send_data(list, 0, num, :twoD)
             "imp2D" -> :ok = send_data(list, 0, num, :impTwoD)
         end
-        list
+        {list, num}
     end
 end
