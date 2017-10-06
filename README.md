@@ -1,12 +1,12 @@
 # GossipSimulator
 
 #TODO
-1. Change all times to milliseconds?
-2. Bonus part of question
+1. Bonus part of question
 
 ##Some design decisions
 1. Every node, after receipt of a rumor or (sum, weight), continuously transmits the rumor or (sum/2, weight/2) **every** 100 milliseconds
 2. **IMPORTANT:** Times in the attached graphs are monotonic times in :native time units. It is returned when we use the monotonic_time/0 function (without any parameters). I decided on using them because they give good resolution for graphs. On the other hand, time returned when we run the program is in milliseconds. This is returned when we use monotonic_time/1 with :millisecond as parameter
+3. If the provided value of num is not a perfect square for 2D and imp2D topologies, the nearest perfect sqaure is used as the value of num
 
 * Team members (1): Anirudh Pathak
 * What is working: All combinations of topologies and algorithms + BONUS (TODO)

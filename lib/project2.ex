@@ -53,13 +53,10 @@ defmodule GossipSimulator do
     topo = Enum.at(args, 1)
     algo = Enum.at(args, 2)
     
-    #register master
-    self() |> Process.register(:master)
-    #create topology
-    {nodes, num} = Topology.create(num, topo, algo);
-    # pick a random node [0, num - 1] 
-    first = Enum.at(nodes, :rand.uniform(num) - 1)
-    prev = System.monotonic_time(:millisecond)
+    self() |> Process.register(:master) #register master
+    {nodes, num} = Topology.create(num, topo, algo) #create topology
+    first = Enum.at(nodes, :rand.uniform(num) - 1) # pick a random node [0, num - 1]
+    prev = System.monotonic_time(:millisecond) #start timer
     thresh = case algo do
        "gossip" -> 
           GenServer.cast(first, :rumor) #spread the rumor
@@ -71,7 +68,8 @@ defmodule GossipSimulator do
     :ok = loop(thresh * num |> round)#loop till master receives num number of successes
     # :ok = loop_debug(num, nodes)#TODO remove this, for debugging
     next = System.monotonic_time(:millisecond)
-    IO.puts "#{next - prev} miliseconds"
+    IO.puts "#{next - prev} milliseconds"
+    #TODO: throws here as master dies after a child has sent a message and before the master receives it. Fix this
 
 
     ######################################

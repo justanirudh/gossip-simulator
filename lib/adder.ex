@@ -22,17 +22,15 @@ defmodule Adder do
         if(child_pid != nil) do
             Process.exit(child_pid, :kill) #kill previous spreader    
         end
-        spawn(fn -> __MODULE__.spread_pushsum(neighbours, num_neighbours, s, w) end) #continuously spread the rumor   
+        spawn(fn -> __MODULE__.spread_pushsum(neighbours, num_neighbours, s, w) end)
     end
 
-    #for debugging
     def handle_call(:show_neighbours, _from, state) do
         {:reply, elem(state, 0), state} 
     end
 
-    #first call to setup the neighbours
     def handle_call({:neighbours, neighbours}, _from, s) do
-        {:reply, :ok, {neighbours, length(neighbours), s, 1, 0, nil}} # reply atom, actual reply, new_state
+        {:reply, :ok, {neighbours, length(neighbours), s, 1, 0, nil}}
     end
 
     #first call to start the pushsum algo
@@ -57,7 +55,7 @@ defmodule Adder do
 
             curr = self() #TODO for debugging
             if child_pid == nil do #TODO: remove this, for debugging
-                #first call: active and child pid is nill, hence first call
+                #first call: active and child pid is nil, hence first call
                 # send Process.whereis(:master), {:first_signal, curr} #TODO for debugging 
             end
             old_ratio = old_s/old_w
@@ -71,7 +69,10 @@ defmodule Adder do
                         Process.exit(child_pid, :kill) #kill previous spreader    
                     end
                     # send Process.whereis(:master), {:inactive, curr} #TODO for debugging
-                    send Process.whereis(:master), :success #send master success
+                    master_pid = Process.whereis(:master)
+                    if(master_pid != nil) do #required if master dies after getting all successes
+                        send master_pid, :success #send master success    
+                    end
                     # IO.inspect new_ratio #TODO for debugging
                     {:noreply, :inactive}
                 else

@@ -86,7 +86,7 @@ defmodule Topology do
             end
 
         #TODO remove this
-        # IO.puts "<plotty: draw, #{num}>"
+        #IO.puts "<plotty: draw, #{num}>"
         
         list = 
             case algo do
