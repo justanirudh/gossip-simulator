@@ -71,7 +71,7 @@ defmodule GossipSimulator do
     :ok = loop(thresh * num |> round)#loop till master receives num number of successes
     # :ok = loop_debug(num, nodes)#TODO remove this, for debugging
     next = System.monotonic_time(:millisecond)
-    IO.puts "#{next - prev} milliseconds"
+    IO.puts "#{next - prev} miliseconds"
 
 
     ######################################

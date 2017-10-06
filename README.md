@@ -5,8 +5,8 @@
 2. Bonus part of question
 
 ##Some design decisions
-1. Every node, after receipt of a rumor/(sum, weight), continuously transmits the rumor/(sum/2, weight/2) every 100 milliseconds
-2. IMPORTANT: Times in the attached graphs are monotonic times in :native time units. It is returned when you use the monotonic_time/0 function (without any parameters). On the other hand, time returned when you run the program is in milliseconds. This is returned when we use monotonic_time/1 with :millisecond as parameter
+1. Every node, after receipt of a rumor or (sum, weight), continuously transmits the rumor or (sum/2, weight/2) **every** 100 milliseconds
+2. **IMPORTANT:** Times in the attached graphs are monotonic times in :native time units. It is returned when we use the monotonic_time/0 function (without any parameters). I decided on using them because they give good resolution for graphs. On the other hand, time returned when we run the program is in milliseconds. This is returned when we use monotonic_time/1 with :millisecond as parameter
 
 * Team members (1): Anirudh Pathak
 * What is working: All combinations of topologies and algorithms + BONUS (TODO)
@@ -36,7 +36,7 @@ Graph2: Convergence means 50% of nodes have heard the rumor at least 10 times (T
 
 ##Push-sum
 **Convergence: 75% of nodes have converged to a value**
-_Graph3_: For _full_ and _imp2D_, convergence occurs. For _line_, convergence occurs if we lower the threshold to 50%. For _2D_, convergence does not seem to occur
+_Graph3_: For _full_ and _imp2D_, convergence occurs. For _line_, convergence occurs if we lower the threshold to 50%. For _2D_, convergence occurs extremely slowly
 
 ## Some interesting findings in Gossip
 1. For push-sum + 2D and push-sum + line, some nodes dont receive the sum even once
