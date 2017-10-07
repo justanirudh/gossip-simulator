@@ -62,9 +62,6 @@ defmodule Topology do
                 _ -> raise topo <> " not supported"  
             end                
             :ok = GenServer.call(server, {:neighbours, neighbours})
-            # ns = GenServer.call(server, :show_neighbours)
-            # IO.inspect server
-            # IO.inspect ns
             send_data(list, index + 1, num, topo)
         else
             :ok
@@ -85,8 +82,7 @@ defmodule Topology do
                 _ -> raise "Not supported"     
             end
 
-        #TODO remove this
-        # IO.puts "<plotty: draw, #{num}>"
+        # IO.puts "<plotty: draw, #{num}>" #TODO for debugging
         
         list = 
             case algo do

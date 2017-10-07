@@ -2,14 +2,7 @@ defmodule Adder do
     use GenServer
     @diff 1.0e-10
     @round_lim 3
-    #state: {neighbours, neighbours_size, s, w, rounds, child pid} 
-  
-    #for debugging
-    defp print(str) do
-        curr = self()
-        IO.inspect curr
-        IO.puts str
-    end
+    #state: {neighbours, neighbours_size, s, w, rounds, child pid}
 
     def spread_pushsum(neighbours, num_neighbours, s, w) do
         Enum.at(neighbours, :rand.uniform(num_neighbours) - 1) |> GenServer.cast({:pushsum, s, w})
@@ -55,7 +48,6 @@ defmodule Adder do
 
             curr = self() #TODO for debugging
             if child_pid == nil do #TODO: remove this, for debugging
-                #first call: active and child pid is nil, hence first call
                 # send Process.whereis(:master), {:first_signal, curr} #TODO for debugging 
             end
             old_ratio = old_s/old_w
