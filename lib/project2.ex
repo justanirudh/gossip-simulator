@@ -32,7 +32,7 @@ defmodule GossipSimulator do
     end
     :ok = loop(thresh * num |> round)
     next = System.monotonic_time(:microsecond)
-    IO.puts "#{next - prev}"
+    IO.puts "#{next - prev} microseconds"
 
   end 
 end
