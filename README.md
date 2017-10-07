@@ -13,16 +13,16 @@
 3. If the provided value of num is not a perfect square for 2D and imp2D topologies, the nearest perfect sqaure is used as the value of num
 
 * Team members (1): Anirudh Pathak
-* What is working: All combinations of topologies and algorithms in terms of their respective definitions of convergence (which is included below for each algo). Further explaination for each topo + algo is in the 'Some interesting findings' section.
+* What is working: All combinations of topologies and algorithms except [PushSum + 2D] which does converge but extremely slowly. Further explaination for each topo + algo is in the 'Some interesting findings' section.
 * What is the largest network you managed to deal with for each type of topology and algorithm:
 ..* Gossip + Full = 16,384
 ..* Gossip + Line = 4,096
 ..* Gossip + 2D = 34,969
 ..* Gossip + imp2D = 34,969
 ..* PushSum + Full = 8,192
-..* PushSum + Line = 16,384
-..* PushSum + 2D = 34,969
-..* PushSum + imp2D = 8,649
+..* PushSum + Line = 8,192
+..* PushSum + 2D = Converges extremely slowly
+..* PushSum + imp2D = 17,424
 
 ## Gossip
 **Convergence: 50% of nodes have heard the rumor at least 10 times**
