@@ -77,12 +77,10 @@ defmodule Topology do
             case topo do
                 "full" -> num
                 "line" -> num
-                "2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round #TODO: always round up?
+                "2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round
                 "imp2D" -> num |> :math.sqrt |> round |> :math.pow(2) |> round
                 _ -> raise "Not supported"     
             end
-
-        # IO.puts "<plotty: draw, #{num}>" #TODO for debugging
         
         list = 
             case algo do

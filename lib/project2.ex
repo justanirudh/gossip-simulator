@@ -10,28 +10,6 @@ defmodule GossipSimulator do
     end
   end
 
-  # defp loop_debug(num, list) do
-  #   case num do
-  #       0 -> :ok
-  #       _ ->
-  #           receive do
-  #               :success ->
-  #                 IO.inspect num 
-  #                 loop_debug(num - 1, list)
-  #               {:first_signal, sender} ->
-  #                 plotty_index = Enum.find_index(list, fn(x) -> x == sender end) + 1
-  #                 IO.puts "<plotty: infected, #{plotty_index}>"
-  #                 loop_debug(num, list)
-  #               {:inactive, sender} ->
-  #                 # IO.inspect sender
-  #                 # IO.inspect list
-  #                 plotty_index = Enum.find_index(list, fn(x) -> x == sender end) + 1
-  #                 IO.puts "<plotty: inactive, #{plotty_index}>"
-  #                 loop_debug(num, list)
-  #           end
-  #   end
-  # end
-
   def main(args) do
     num = Enum.at(args, 0) |> String.to_integer
     topo = Enum.at(args, 1)
@@ -47,10 +25,12 @@ defmodule GossipSimulator do
           0.5
        "push-sum" -> 
           GenServer.cast(first, :start) #spread the rumor
-          0.75
-    end 
+          case topo do
+             "line" -> 0.5
+              _ -> 0.75
+          end
+    end
     :ok = loop(thresh * num |> round)
-    # :ok = loop_debug(thresh * num |> round, nodes)#TODO remove this, for debugging
     next = System.monotonic_time(:microsecond)
     IO.puts "#{next - prev}"
 

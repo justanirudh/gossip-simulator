@@ -6,7 +6,6 @@ defmodule Adder do
 
     def spread_pushsum(neighbours, num_neighbours, s, w) do
         Enum.at(neighbours, :rand.uniform(num_neighbours) - 1) |> GenServer.cast({:pushsum, s, w})
-        # IO.puts "spread the sum"
         :timer.sleep(100)
         spread_pushsum(neighbours, num_neighbours, s, w)
     end
@@ -46,10 +45,6 @@ defmodule Adder do
             rounds = elem(state, 4)
             child_pid = elem(state, 5)
 
-            curr = self() #TODO for debugging
-            if child_pid == nil do #TODO: remove this, for debugging
-                # send Process.whereis(:master), {:first_signal, curr} #TODO for debugging 
-            end
             old_ratio = old_s/old_w
             new_s = old_s + s
             new_w = old_w + w
@@ -60,7 +55,6 @@ defmodule Adder do
                     if(child_pid != nil) do
                         Process.exit(child_pid, :kill) #kill previous spreader    
                     end
-                    # send Process.whereis(:master), {:inactive, curr} #TODO for debugging
                     master_pid = Process.whereis(:master)
                     if(master_pid != nil) do #required if master dies after getting all successes
                         send master_pid, :success #send master success    
