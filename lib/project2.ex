@@ -19,18 +19,19 @@ defmodule GossipSimulator do
     {nodes, num} = Topology.create(num, topo, algo) #create topology
     first = Enum.at(nodes, :rand.uniform(num) - 1) # pick a random node [0, num - 1]
     prev = System.monotonic_time(:microsecond) #start timer
-    thresh = case algo do
+    limit = case algo do
        "gossip" -> 
           GenServer.cast(first, :rumor) #spread the rumor
-          0.5
+          0.5 * num |> round
        "push-sum" -> 
           GenServer.cast(first, :start) #spread the rumor
           case topo do
-             "line" -> 0.5
-              _ -> 0.75
+             "line" -> 0.5 * num |> round
+             "2D" -> 1
+              _ -> 0.75 * num |> round
           end
     end
-    :ok = loop(thresh * num |> round)
+    :ok = loop(limit)
     next = System.monotonic_time(:microsecond)
     IO.puts "#{next - prev} microseconds"
 
