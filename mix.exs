@@ -21,7 +21,8 @@ defmodule GossipSimulator.Mixfile do
 
     #Run as an executable
     def escript do
-      [main_module: GossipSimulator]
+      [main_module: GossipSimulator,
+      emu_args: [ "+P 5000000" ]]
     end
 
   # Run "mix help deps" to learn about dependencies.
