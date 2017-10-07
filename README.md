@@ -1,5 +1,12 @@
 # GossipSimulator
 
+#Contents: project2 directory that has the:
+1. source code: Entire source code of this project
+2. Graphs.xlsx: Contains 3 graphs along with their respective data:
+* Graph-1: Four topologies for Gossip algo where convergence means all nodes have heard the rumor at least once
+* Graph-2: Four topologies for Gossip algo where convergence means at least 50% of nodes have heard the rumor at least 10 times (This convergence condition is used in the final code submission)
+* Graph-3: Four topologies for PushSum algo where convergence means 75% of nodes have converged to a value for Full, 2D and imp2D and 50% of nodes have converged to a value for line. 
+
 ##Some design decisions
 1. Every node, after receipt of a rumor or (sum, weight), continuously transmits the rumor or (sum/2, weight/2) every 100 milliseconds
 2. All Times are in microseconds
